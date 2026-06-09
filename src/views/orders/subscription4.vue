@@ -15,6 +15,21 @@
                 @change="changePagination" bordered :scroll="{ x: true }">
             </a-table>
         </a-card>
+
+        <a-modal title="手动补差价" :visible="diffVisible" :confirmLoading="diffLoading" @ok="submitDiff"
+            @cancel="diffVisible = false">
+            <a-form>
+                <a-form-item label="本单usdt差值" :labelCol="{ span: 8 }" :wrapperCol="{ span: 14 }">
+                    <a-input v-model="diffForm.amountOne" type="number" placeholder="请输入" />
+                </a-form-item>
+                <a-form-item label="本单ispay差值" :labelCol="{ span: 8 }" :wrapperCol="{ span: 14 }">
+                    <a-input v-model="diffForm.amountTwo" type="number" placeholder="请输入" />
+                </a-form-item>
+                <a-form-item label="本单每日释放ispay数字" :labelCol="{ span: 8 }" :wrapperCol="{ span: 14 }">
+                    <a-input v-model="diffForm.amountThree" type="number" placeholder="请输入" />
+                </a-form-item>
+            </a-form>
+        </a-modal>
     </PageView>
 </template>
 
@@ -38,6 +53,19 @@ export default {
                 {
                     title: '地址',
                     dataIndex: 'address',
+                },
+                {
+                    title: '操作',
+                    key: 'action',
+                    fixed: 'right',
+                    width: 130,
+                    customRender: (v) => {
+                        return (
+                            <a-button type="primary" size="small" onClick={() => {
+                                this.openDiff(v);
+                            }}>手动补差价</a-button>
+                        )
+                    },
                 },
                 // {
                 //     title: '商品名称',
@@ -77,9 +105,47 @@ export default {
                 address: '',
                 reason: 'buy',
             },
+            diffVisible: false,
+            diffLoading: false,
+            diffForm: {
+                id: undefined,
+                address: '',
+                amountOne: '',
+                amountTwo: '',
+                amountThree: '',
+            },
         }
     },
     methods: {
+        // 打开补差价弹窗，回填该行的 id 与 address
+        openDiff(record) {
+            this.diffForm = {
+                id: record.id,
+                address: record.address,
+                amountOne: '',
+                amountTwo: '',
+                amountThree: '',
+            }
+            this.diffVisible = true
+        },
+        // 提交补差价：id、address 原样传，三个金额转为 double
+        submitDiff() {
+            this.diffLoading = true
+            Gai.buy_four_diff({
+                id: this.diffForm.id,
+                address: this.diffForm.address,
+                amountOne: Number(this.diffForm.amountOne) || 0,
+                amountTwo: Number(this.diffForm.amountTwo) || 0,
+                amountThree: Number(this.diffForm.amountThree) || 0,
+            }).then(() => {
+                this.$message.success('补差价成功')
+                this.diffVisible = false
+                this.diffLoading = false
+                this.getList()
+            }).catch(() => {
+                this.diffLoading = false
+            })
+        },
         getList() {
             this.loading = true
             Gai.buy_list_4({

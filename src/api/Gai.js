@@ -58,6 +58,14 @@ export default {
             data: parameter
         })
     },
+    // 手动补差价：参数 id(uint64)、address(string)、amountOne/amountTwo/amountThree(double)
+    buy_four_diff: (parameter) => {
+        return axios({
+            url: `${api8005}/update_buy_four`,
+            method: 'post',
+            data: parameter
+        })
+    },
     user_list: (parameter) => {
         return axios({
             url: `${api8005}/user_list`,
