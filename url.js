@@ -1,3 +1,6 @@
 // module.exports = "http://44.192.48.164"
 // module.exports = "https://www.gfhhjf.com"
-module.exports = "https://www.ispayplay.net"
+// module.exports = "https://www.ispayplay.net"
+// module.exports = "https://www.ispayplay.org"
+// module.exports = "https://www.ispaychain.org"
+module.exports = "https://www.ispaypiay.com"
