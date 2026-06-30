@@ -235,6 +235,13 @@ export default {
             data: parameter
         })
     },
+    vip_update_new: (parameter) => {
+        return axios({
+            url: `${api8006}/vip_update_new`,
+            method: 'post',
+            data: parameter
+        })
+    },
     change_address: (parameter) => {
         return axios({
             url: `${api8006}/change_address`,

@@ -95,7 +95,7 @@ export default {
                     dataIndex: 'areaMax',
                 },
                 {
-                    title: '级别',
+                    title: '领导奖级别',
                     dataIndex: 'vip',
                 },
                 {
@@ -147,9 +147,9 @@ export default {
                                         </a-button>
 
                                         <a-menu slot="overlay">
-                                            <a-menu-item onClick={() => this.vip_update(v.userId, v.vip)}>
+                                            {/* <a-menu-item onClick={() => this.vip_update(v.userId, v.vip)}>
                                                 修改级别
-                                            </a-menu-item>
+                                            </a-menu-item> */}
 
                                             <a-menu-item onClick={() =>
                                                 this.undo_lock(v.userId, v.lock === '1' ? '0' : '1')
@@ -189,6 +189,10 @@ export default {
 
                                             <a-menu-item onClick={() => this.edit_address(v.address)}>
                                                 修改地址
+                                            </a-menu-item>
+
+                                            <a-menu-item onClick={() => this.vip_update_new(v.userId, v.vip)}>
+                                                设置领导奖级别
                                             </a-menu-item>
                                         </a-menu>
                                     </a-dropdown>
@@ -272,6 +276,43 @@ export default {
                             return;
                         }
                         Gai.vip_update({ user_id, vip }).then(res => {
+                            resolve()
+                            this.getList()
+                        }).catch(res => {
+                            reject()
+                        })
+                    })
+                }
+            })
+        },
+        vip_update_new(user_id, defaultValue) {
+            let vip = defaultValue;
+            this.$confirm({
+                title: `设置领导奖级别`,
+                content: (
+                    <a-select style="width:200px" defaultValue={defaultValue} placeholder="选择级别" onChange={(val) => {
+                        vip = val;
+                    }}>
+                        <a-select-option value="0">无领导奖级别</a-select-option>
+                        <a-select-option value="1">1</a-select-option>
+                        <a-select-option value="2">2</a-select-option>
+                        <a-select-option value="3">3</a-select-option>
+                        <a-select-option value="4">4</a-select-option>
+                        <a-select-option value="5">5</a-select-option>
+                    </a-select>
+                ),
+                centered: true,
+                onOk: () => {
+                    return new Promise((resolve, reject) => {
+                        if (vip === undefined) {
+                            this.$notification.warning({
+                                message: '提示',
+                                description: '请选择级别'
+                            })
+                            reject()
+                            return;
+                        }
+                        Gai.vip_update_new({ user_id, vip }).then(res => {
                             resolve()
                             this.getList()
                         }).catch(res => {

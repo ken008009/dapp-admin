@@ -47,7 +47,8 @@ const reasonType = {
     withdraw: '提现',
     buy_four: '新认购',
     recommend_four_new: '新认购直推奖',
-    ispay_reward: '新认购每日释放'
+    ispay_reward: '新认购每日释放',
+    daily_area_new: '领导奖'
 }
 
 export default {
