@@ -111,6 +111,14 @@ export default {
                     }
                 },
                 {
+                    title: '个人提现状态',
+                    dataIndex: 'unDo',
+                    customRender: (v) => {
+                        if (v == '1') return '已锁定'
+                        return '正常'
+                    }
+                },
+                {
                     title: '上级分红',
                     dataIndex: 'lockReward',
                     customRender: (v) => {
@@ -169,6 +177,12 @@ export default {
                                                 {v.lockReward === '1' ? '开启上级分红' : '关闭上级分红'}
                                             </a-menu-item>
 
+                                            <a-menu-item onClick={() =>
+                                                this.undo_update(v.userId, v.unDo == '1' ? '0' : '1')
+                                            }>
+                                                {v.unDo === '1' ? '解锁个人提现' : '锁定个人提现'}
+                                            </a-menu-item>
+
                                             <a-menu-divider />
 
                                             <a-menu-item onClick={() => this.set_isPay(v.address)}>
@@ -194,6 +208,7 @@ export default {
                                             <a-menu-item onClick={() => this.vip_update_new(v.userId, v.vip)}>
                                                 设置领导奖级别
                                             </a-menu-item>
+
                                         </a-menu>
                                     </a-dropdown>
                                 </a-button-group>
@@ -525,10 +540,10 @@ export default {
             })
         },
         undo_update(user_id, undo) {
-            let text = undo === "1" ? `冻结` : `解冻`;
+            let text = undo === "1" ? `锁定个人提现` : `解锁个人提现`;
             this.$confirm({
                 title: `${text}提示`,
-                content: `确定要${text}此账户吗?`,
+                content: `确定要${text}吗?`,
                 centered: true,
                 onOk: () => {
                     return new Promise((resolve, reject) => {
